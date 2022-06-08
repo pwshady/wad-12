@@ -3,6 +3,7 @@ import file.IOFileData
 import file.IOFileJson
 import staticWAD.WADStatic
 import tornadofx.launch
+import views.WADApp
 
 import java.util.*
 
@@ -28,6 +29,6 @@ fun main(){
     if(resultCode != -1){
         WADStatic.WADstat.errorList.plus(Pair(0, resultCode))
     }
-
+    println(resultCode)
     launch<WADApp>()
 }

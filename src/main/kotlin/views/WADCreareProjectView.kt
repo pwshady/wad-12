@@ -1,9 +1,5 @@
-package vievs
+package views
 
-import Controllers.WADProjectsController
-import Models.ProjectSettings
-import Models.WADProject
-import Static.WADStatus
 import com.google.gson.Gson
 import controller.WADProjectsController
 import javafx.beans.property.SimpleObjectProperty
@@ -12,6 +8,9 @@ import javafx.scene.control.DatePicker
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
 import json.WADProjectJson
+import models.ProjectSettings
+import models.WADProject
+import staticWAD.WADStatic
 import tornadofx.*
 import validation.ValidationProject
 import java.io.File
@@ -21,9 +20,10 @@ import java.time.LocalDate
 import java.util.*
 
 class WADCreateProjectViev() : Fragment() {
-    val  wadProjectsController : WADProjectsController by inject()
+    private val  wadProjectsController : WADProjectsController by inject()
     override val root: Parent = form {
         var dirFlag = true
+        var creat = true
         var name : TextField by singleAssign()
         var domenName : TextField by singleAssign()
         var from : TextField by singleAssign()
@@ -38,12 +38,6 @@ class WADCreateProjectViev() : Fragment() {
         val sdf = SimpleDateFormat("yyyyMMddHHmmss")
         val min = "19970101000000"
         var max = sdf.format(Date())
-        val file = File("allproject")
-        val gson = Gson()
-        var allWADProjectJson = mutableListOf<WADProjectJson>()
-        if(file.exists()) {
-            allWADProjectJson = gson.fromJson(FileReader("allproject"), allWADProjectJson::class.java)
-        }
 
         fun statusUpdating (errorText : List<Pair<String,Int>>):Unit
         {
@@ -51,17 +45,21 @@ class WADCreateProjectViev() : Fragment() {
             when (errorText.map { task -> task.second }.maxOrNull()){
                 0 -> errorList.style{
                     backgroundColor += c("green")
+                    creat = true
                 }
                 1 -> errorList.style{
                     backgroundColor += c("yellow")
+                    creat = true
                 }
                 2 -> errorList.style{
                     backgroundColor += c("red")
+                    creat = false
                 }
             }
+            println(creat)
         }
-        fieldset("Create project") {
-            field("Project name") {
+        fieldset(WADStatic.WADconst.labels["WADCreateProjectView__formname"]) {
+            field(WADStatic.WADconst.labels["WADCreateProjectView__projectname"]) {
                 name = textfield()
                 errorText.set(0, Pair(ValidationProject.nameValidation(name.text).first,ValidationProject.nameValidation(name.text).second))
                 name.textProperty().onChange {
@@ -69,17 +67,20 @@ class WADCreateProjectViev() : Fragment() {
                     if (dirFlag){
                         directory.text = "c:\\wad\\${name.text}"
                     }
-                    if (allWADProjectJson != null) {
-                        for (i in 0..allWADProjectJson.size-1){
-                            if(name.text == gson.fromJson(gson.toJson(allWADProjectJson[i]),WADProjectJson::class.java).name){
-                                errorText.set(0, Pair("A project with that name already exists. The data will be lost", 2))
+                    if (WADStatic.WADstat.allProjectListName != null) {
+                        for (i in 0 until WADStatic.WADstat.allProjectListName.size){
+                            if(name.text == WADStatic.WADstat.allProjectListName[i]){
+                                Pair(WADStatic.WADconst.labels["WADCreateProjectView__projectname__error1"], 2)?.let { it1 ->
+                                    errorText.set(0, it1 as Pair<String, Int>
+                                    )
+                                }
                             }
                         }
                     }
                     statusUpdating (errorText);
                 }
             }
-            field("Domen name"){
+            field(WADStatic.WADconst.labels["WADCreateProjectView__domenname"]){
                 domenName = textfield()
                 errorText.set(1, Pair(ValidationProject.domenNameValidation(domenName.text).first,ValidationProject.domenNameValidation(domenName.text).second))
                 domenName.textProperty().onChange {
@@ -87,61 +88,83 @@ class WADCreateProjectViev() : Fragment() {
                     statusUpdating(errorText);
                 }
             }
-            field("Date from"){
+            field(WADStatic.WADconst.labels["WADCreateProjectView__datefrom"]){
                 hbox {
                     from = textfield()
                     dateFrom = datepicker(dateFromValue){
                         value = LocalDate.now()
                     }
-                    button("min") {
-                        action {
-                            from.text = min
+                    WADStatic.WADconst.labels["WADCreateProjectView__button__minimum"]?.let {
+                        button(it) {
+                            action {
+                                from.text = min
+                            }
                         }
                     }
                     dateFrom.valueProperty().onChange {
                         from.text = "${dateFrom.value.toString().replace("-","")}000000"
                     }
-                    errorText.set(2, Pair(ValidationProject.dateTimeValidation(from.text,min,"","from")
-                        .first,ValidationProject.dateTimeValidation(from.text,min,"", "from").second))
+                    errorText.set(2, Pair(ValidationProject.dateTimeValidation(from.text,min,"",
+                        WADStatic.WADconst.labels["WADCreateProjectView__datefrom"]
+                    )
+                        .first,ValidationProject.dateTimeValidation(from.text,min,"",
+                        WADStatic.WADconst.labels["WADCreateProjectView__datefrom"]
+                    ).second))
                     from.textProperty().onChange {
-                        errorText.set(2, Pair(ValidationProject.dateTimeValidation(from.text,min,"","from")
-                            .first,ValidationProject.dateTimeValidation(from.text,min,"","from").second))
+                        errorText.set(2, Pair(ValidationProject.dateTimeValidation(from.text,min,"",
+                            WADStatic.WADconst.labels["WADCreateProjectView__datefrom"]
+                        )
+                            .first,ValidationProject.dateTimeValidation(from.text,min,"",
+                            WADStatic.WADconst.labels["WADCreateProjectView__datefrom"]
+                        ).second))
                         statusUpdating(errorText);
                     }
                 }
             }
-            field("Date to"){
+            field(WADStatic.WADconst.labels["WADCreateProjectView__dateto"]){
                 hbox{
                     to = textfield()
                     dateTo = datepicker(dateToValue){
                         value = LocalDate.now()
                     }
-                    button("max") {
-                        action {
-                            max = sdf.format(Date())
-                            to.text = max
+                    WADStatic.WADconst.labels["WADCreateProjectView__button__maximum"]?.let {
+                        button(it) {
+                            action {
+                                max = sdf.format(Date())
+                                to.text = max
+                            }
                         }
                     }
                     dateTo.valueProperty().onChange {
                         to.text = "${dateTo.value.toString().replace("-","")}000000"
                         max = sdf.format(Date())
                     }
-                    errorText.set(3, Pair(ValidationProject.dateTimeValidation(to.text,"",max,"to")
-                        .first,ValidationProject.dateTimeValidation(to.text,"",max, "to").second))
+                    errorText.set(3, Pair(ValidationProject.dateTimeValidation(to.text,"",max,
+                        WADStatic.WADconst.labels["WADCreateProjectView__dateto"]
+                    )
+                        .first,ValidationProject.dateTimeValidation(to.text,"",max,
+                        WADStatic.WADconst.labels["WADCreateProjectView__dateto"]
+                    ).second))
                     to.textProperty().onChange {
                         max = sdf.format(Date())
-                        errorText.set(3, Pair(ValidationProject.dateTimeValidation(to.text,"",max,"to")
-                            .first,ValidationProject.dateTimeValidation(to.text,"",max, "to").second))
+                        errorText.set(3, Pair(ValidationProject.dateTimeValidation(to.text,"",max,
+                            WADStatic.WADconst.labels["WADCreateProjectView__dateto"]
+                        )
+                            .first,ValidationProject.dateTimeValidation(to.text,"",max,
+                            WADStatic.WADconst.labels["WADCreateProjectView__dateto"]
+                        ).second))
                         statusUpdating(errorText);
                     }
                 }
             }
-            field("Files directory"){
+            field(WADStatic.WADconst.labels["WADCreateProjectView__Files_directory"]){
                 hbox {
                     directory = textfield()
-                    button("path"){
-                        action {
+                    WADStatic.WADconst.labels["WADCreateProjectView__button__path"]?.let {
+                        button(it){
+                            action {
 
+                            }
                         }
                     }
                     errorText.set(4, Pair(ValidationProject.directotyValidation(directory.text)
@@ -154,7 +177,11 @@ class WADCreateProjectViev() : Fragment() {
                             .first,ValidationProject.directotyValidation(directory.text).second))
                         val dir = File(directory.text)
                         if(dir.isDirectory){
-                            errorText.set(4, Pair("A directory with that name already exists. The operation of the program may not be correct",1))
+                            Pair(WADStatic.WADconst.labels["WADCreateProjectView__projectname__error2"],1)?.let { it1 ->
+                                errorText.set(4,
+                                    it1 as Pair<String, Int>
+                                )
+                            }
                         }
                         statusUpdating(errorText);
                     }
@@ -167,25 +194,31 @@ class WADCreateProjectViev() : Fragment() {
         }
 
         hbox {
-            button("Create") {
-                setOnAction {
-                    var result : Int
-                    var wadProject = WADProject(name.text, domenName.text, directory.text, 0, "",
-                                                ProjectSettings(from.text, to.text))
-                    result = wadProjectsController.creteProject(wadProject)
-                    val dir = File(directory.text)
-                    dir.mkdirs()
-                    result = wadProjectsController.openProject(wadProject.name)
-                    WADStatus.stat.createProjectStatusCode = 2
-                    wadProjectsController.createProjectViev()
-                    close()
+            WADStatic.WADconst.labels["WADCreateProjectView__button__creat"]?.let {
+                button(it) {
+                    setOnAction {
+                        if (creat) {
+                            var result: Int
+                            var wadProject = WADProject(
+                                name.text, domenName.text, directory.text, 0, "",
+                                ProjectSettings(from.text, to.text)
+                            )
+                            result = wadProjectsController.createProject(wadProject)
+                            //result = wadProjectsController.openProject(wadProject.name)
+                            WADStatic.WADstat.createProjectStatusCode = 2
+                            wadProjectsController.createProjectViev()
+                            close()
+                        }
+                    }
                 }
             }
-            button("Cancel") {
-                setOnAction {
-                    WADStatus.stat.createProjectStatusCode = 5
-                    wadProjectsController.createProjectViev()
-                    close()
+            WADStatic.WADconst.labels["WADCreateProjectView__button__cancel"]?.let {
+                button(it) {
+                    setOnAction {
+                        WADStatic.WADstat.createProjectStatusCode = 5
+                        wadProjectsController.createProjectViev()
+                        close()
+                    }
                 }
             }
         }
@@ -193,7 +226,7 @@ class WADCreateProjectViev() : Fragment() {
     }
 
     override fun onUndock() {
-        WADStatus.stat.createProjectStatusCode = 0
+        WADStatic.WADstat.createProjectStatusCode = 0
     }
 
 }

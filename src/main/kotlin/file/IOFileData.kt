@@ -2,6 +2,7 @@ package file
 
 import staticWAD.WADStatic
 import java.io.File
+import java.nio.charset.Charset
 
 class IOFileData {
 
@@ -57,15 +58,17 @@ class IOFileData {
         var mapResult = mutableMapOf<String, String>()
         var listResult = mutableListOf<String>()
         try {
-            file.forEachLine { listResult.add(it) }
+            file.forEachLine(Charset.defaultCharset()) { listResult.add(it) }
         }
         catch (e: Exception){
             resultCode = 101
         }
         try {
             listResult.map {
-                var arrayStr = it.split("=")
-                mapResult.put(arrayStr[0], arrayStr[1])
+                if (it.contains("=")){
+                    var arrayStr = it.split("=")
+                    mapResult.put(arrayStr[0], arrayStr[1])
+                }
             }
         }
         catch (e: Exception){

@@ -1,23 +1,23 @@
-package vievs
+package views
 
-import Controllers.WADProjectsController
-import Static.WADStatus
+import controller.WADProjectsController
 import javafx.scene.Parent
 import javafx.scene.control.ListView
 import javafx.scene.control.SelectionMode
+import staticWAD.WADStatic
 import tornadofx.*
 
-class WADOpenProjectViev : Fragment() {
+class WADOpenProjectView : Fragment() {
     val  wadProjectsController : WADProjectsController by inject()
     override val root: Parent = vbox {
         var listViev : ListView<String> by singleAssign()
-        listViev = listview(WADStatus.stat.openProjectListName){
+        listViev = listview(WADStatic.WADstat.openProjectListName){
             selectionModel.selectionMode = SelectionMode.SINGLE
             contextmenu {
                 item("Open").action {
                     if (listViev.selectedItem != null){
                         if (wadProjectsController.openProject(listViev.selectedItem!!) == 0){
-                            WADStatus.stat.openProjectListName
+                            WADStatic.WADstat.openProjectListName
                         }
                     }
                 }
@@ -25,26 +25,21 @@ class WADOpenProjectViev : Fragment() {
                     if (listViev.selectedItem != null){
         //                if (wadProjectsController.deleteProject(listViev.selectedItem!!) == 0){
         //                    WADStatus.stat.openProjectListName
-        //                }
+                        }
                     }
                 }
             }
-        }
+
         listViev.onDoubleClick {
             if (listViev.selectedItem != null){
                 if (wadProjectsController.openProject(listViev.selectedItem!!) == 0){
-                    WADStatus.stat.openProjectListName
+                    WADStatic.WADstat.openProjectListName
                 }
             }
         }
 
-        button("hh"){
-            action {
-        //        WADStatus.stat.openProjectListName.add("foo")
-            }
-        }
     }
     override fun onUndock() {
-    //    WADStatus.stat.openProjectStatusCode = 0
+        WADStatic.WADstat.openProjectStatusCode = 0
     }
 }

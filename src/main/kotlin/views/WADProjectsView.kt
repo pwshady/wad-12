@@ -1,15 +1,15 @@
-package vievs
+package views
 
 import javafx.scene.Parent
 import tornadofx.*
 
 
-class WADProjectsViev() : View() {
+class WADProjectsView() : View() {
     init {
 
     }
     override val root: Parent = borderpane {
-        var topViev = WADProjectTopViev()
+        var topViev = WADProjectTopView()
         top(topViev::class)
 
         button("t1"){

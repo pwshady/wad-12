@@ -1,16 +1,18 @@
-package vievs
+package views
 
 import controller.WADProjectsController
 import javafx.scene.Parent
+import staticWAD.WADStatic
 import tornadofx.*
 
-class WADProjectTopViev() : View() {
+class WADProjectTopView() : View() {
     val  projectsController : WADProjectsController by inject()
     override val root: Parent = menubar {
-        menu("File") {
-            //item("New project").action { projectsController.createProjectViev() }
+        menu(WADStatic.WADconst.labels["WADProjectTopView__menu__file"]) {
+            WADStatic.WADconst.labels["WADProjectTopView__menu__file__new_project"]?.let { item(it).action { projectsController.createProjectViev() } }
+            item("")
             //item("Open project").action { projectsController.openProjectViev() }
-            menu ("Stop"){  }
+            menu ("Стоп"){  }
             menu ("Stop and close"){  }
             item("New project")
         }

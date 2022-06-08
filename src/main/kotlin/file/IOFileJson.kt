@@ -32,6 +32,26 @@ class IOFileJson {
         return resultCode
     }
 
+    fun saveAllProjects(wadProject: WADProject): Int
+    {
+        var resultCode = 0
+        try {
+            var file = File("src/main/resources/allproject.json")
+            val gson = Gson()
+            var allWADProjectJson = mutableListOf<WADProjectJson>()
+            for (i in 0 until WADStatic.WADstat.allProjectList.size) {
+                allWADProjectJson.add(wadProjectToWadProjectJson(WADStatic.WADstat.allProjectList[i]))
+            }
+            allWADProjectJson.add(wadProjectToWadProjectJson(wadProject))
+            file.writeText(gson.toJson(allWADProjectJson))
+            resultCode = -1
+        }
+        catch (e: Exception){
+            resultCode = 102
+        }
+        return resultCode
+    }
+
     fun loadOpenProjects(): Int
     {
         var resultCode = 0
@@ -55,6 +75,59 @@ class IOFileJson {
         return resultCode
     }
 
+    fun saveOpenProjects(wadProject: WADProject): Int
+    {
+        var resultCode = 0
+        try {
+            var file = File("src/main/resources/openproject.json")
+            val gson = Gson()
+            var allWADProjectJson = mutableListOf<WADProjectJson>()
+            for (i in 0 until WADStatic.WADstat.allProjectList.size) {
+                allWADProjectJson.add(wadProjectToWadProjectJson(WADStatic.WADstat.allProjectList[i]))
+            }
+            allWADProjectJson.add(wadProjectToWadProjectJson(wadProject))
+            file.writeText(gson.toJson(allWADProjectJson))
+            resultCode = -1
+        }
+        catch (e: Exception){
+            resultCode = 102
+        }
+        return resultCode
+    }
+
+    fun loadProject(path: String): Pair<Int, WADProject>
+    {
+        var resultCode = 0
+        var wadProject = WADProject()
+        try {
+            var file = File(path)
+            if(file.exists()){
+                val gson = Gson()
+                wadProject = wadProjectJsonToWadProject(gson.fromJson(FileReader(file), WADProjectJson::class.java))
+            }
+            resultCode = -1
+        }
+        catch (e: Exception){
+            resultCode = 101
+        }
+        return Pair(resultCode, wadProject)
+    }
+
+    fun saveProject(wadProject: WADProject): Int
+    {
+        var resultCode = 0
+        try {
+            var file = File("${wadProject.path}\\${wadProject.name}.wadproject")
+            val gson = Gson()
+            file.writeText(gson.toJson(wadProject))
+
+            resultCode = -1
+        }
+        catch (e: Exception){
+            resultCode = 101
+        }
+        return resultCode
+    }
 
     fun wadProjectToWadProjectJson(wadProject: WADProject) : WADProjectJson
     {
@@ -74,7 +147,8 @@ class IOFileJson {
         )
     }
 
-    private fun wadProjectJsonToWadProject(wadProjectJson: WADProjectJson): WADProject {
+    private fun wadProjectJsonToWadProject(wadProjectJson: WADProjectJson): WADProject
+    {
         var wadProjectSettings = ProjectSettings(
             wadProjectJson.projectSettings.from,
             wadProjectJson.projectSettings.to,
