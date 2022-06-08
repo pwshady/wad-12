@@ -51,8 +51,9 @@ class WADProjectsController : Controller() {
         return resultCode
     }
 
-    fun openProjectView(){
-
+    fun openProjectView(): Int
+    {
+        return -1
     }
 
     fun openProject(name: String): Int

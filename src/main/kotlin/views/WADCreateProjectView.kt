@@ -1,20 +1,17 @@
 package views
 
-import com.google.gson.Gson
 import controller.WADProjectsController
 import javafx.beans.property.SimpleObjectProperty
 import javafx.scene.Parent
 import javafx.scene.control.DatePicker
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
-import json.WADProjectJson
 import models.ProjectSettings
 import models.WADProject
 import staticWAD.WADStatic
 import tornadofx.*
 import validation.ValidationProject
 import java.io.File
-import java.io.FileReader
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -39,8 +36,7 @@ class WADCreateProjectView() : Fragment() {
         val min = "19970101000000"
         var max = sdf.format(Date())
 
-        fun statusUpdating (errorText : List<Pair<String,Int>>):Unit
-        {
+        fun statusUpdating (errorText : List<Pair<String,Int>>):Unit {
             errorList.textProperty().set(errorText.map { task -> task.first }.joinToString(separator =""))
             when (errorText.map { task -> task.second }.maxOrNull()){
                 0 -> errorList.style{
@@ -58,7 +54,8 @@ class WADCreateProjectView() : Fragment() {
             }
             println(creat)
         }
-        fieldset(WADStatic.WADconst.labels["WADCreateProjectView__formname"]) {
+
+        fieldset(WADStatic.WADconst.labels["WADCreateProjectView__formname"]){
             field(WADStatic.WADconst.labels["WADCreateProjectView__projectname"]) {
                 name = textfield()
                 errorText.set(0, Pair(ValidationProject.nameValidation(name.text).first,ValidationProject.nameValidation(name.text).second))
@@ -193,8 +190,8 @@ class WADCreateProjectView() : Fragment() {
             statusUpdating(errorText);
         }
 
-        hbox {
-            WADStatic.WADconst.labels["WADCreateProjectView__button__creat"]?.let {
+        hbox{
+            WADStatic.WADconst.labels["WADCreateProjectView__button__creat"]?.let{
                 button(it) {
                     setOnAction {
                         if (creat) {

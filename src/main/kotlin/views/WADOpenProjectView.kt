@@ -8,7 +8,7 @@ import staticWAD.WADStatic
 import tornadofx.*
 
 class WADOpenProjectView : Fragment() {
-    val  wadProjectsController : WADProjectsController by inject()
+    private val  wadProjectsController : WADProjectsController by inject()
     override val root: Parent = vbox {
         var listViev : ListView<String> by singleAssign()
         listViev = listview(WADStatic.WADstat.openProjectListName){
@@ -25,11 +25,11 @@ class WADOpenProjectView : Fragment() {
                     if (listViev.selectedItem != null){
         //                if (wadProjectsController.deleteProject(listViev.selectedItem!!) == 0){
         //                    WADStatus.stat.openProjectListName
-                        }
+        //                }
                     }
                 }
             }
-
+        }
         listViev.onDoubleClick {
             if (listViev.selectedItem != null){
                 if (wadProjectsController.openProject(listViev.selectedItem!!) == 0){
@@ -38,8 +38,13 @@ class WADOpenProjectView : Fragment() {
             }
         }
 
+        button("hh"){
+            action {
+        //        WADStatus.stat.openProjectListName.add("foo")
+            }
+        }
     }
     override fun onUndock() {
-        WADStatic.WADstat.openProjectStatusCode = 0
+    //    WADStatus.stat.openProjectStatusCode = 0
     }
 }

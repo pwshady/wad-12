@@ -1,6 +1,7 @@
 <--Top Menu-->
 WADProjectTopView__menu__file=Файл
 WADProjectTopView__menu__file__new_project=Новый проект
+WADProjectTopView__menu__file__open_project=Открыть проект
 
 <--ValidationProject-->
 ValidationProject__error__The_project_name_field_should_not_be_empty=Поле названия проекта не должно быть пустым
