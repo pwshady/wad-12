@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 
-class WADCreateProjectViev() : Fragment() {
+class WADCreateProjectView() : Fragment() {
     private val  wadProjectsController : WADProjectsController by inject()
     override val root: Parent = form {
         var dirFlag = true
@@ -206,7 +206,7 @@ class WADCreateProjectViev() : Fragment() {
                             result = wadProjectsController.createProject(wadProject)
                             //result = wadProjectsController.openProject(wadProject.name)
                             WADStatic.WADstat.createProjectStatusCode = 2
-                            wadProjectsController.createProjectViev()
+                            wadProjectsController.createProjectView()
                             close()
                         }
                     }
@@ -216,7 +216,7 @@ class WADCreateProjectViev() : Fragment() {
                 button(it) {
                     setOnAction {
                         WADStatic.WADstat.createProjectStatusCode = 5
-                        wadProjectsController.createProjectViev()
+                        wadProjectsController.createProjectView()
                         close()
                     }
                 }
@@ -230,5 +230,3 @@ class WADCreateProjectViev() : Fragment() {
     }
 
 }
-
-

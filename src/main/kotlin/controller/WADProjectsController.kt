@@ -4,15 +4,16 @@ import file.IOFileJson
 import models.WADProject
 import staticWAD.WADStatic
 import tornadofx.Controller
-import views.WADCreateProjectViev
+import views.WADCreateProjectView
+
 import java.io.File
 
 class WADProjectsController : Controller() {
-    fun createProjectViev(): Int
+    fun createProjectView(): Int
     {
         when (WADStatic.WADstat.createProjectStatusCode){
             0 -> {
-                find<WADCreateProjectViev>().openWindow(owner = null)
+                find<WADCreateProjectView>().openWindow(owner = null)
                 WADStatic.WADstat.createProjectStatusCode = 1
             }
             1 -> println("ocp")
@@ -26,6 +27,7 @@ class WADProjectsController : Controller() {
         }
         return -1
     }
+
 
     fun createProject(wadProject: WADProject): Int
     {
@@ -47,6 +49,10 @@ class WADProjectsController : Controller() {
             WADStatic.WADstat.openProjectListName.add(wadProject.name)
         }
         return resultCode
+    }
+
+    fun openProjectView(){
+
     }
 
     fun openProject(name: String): Int
