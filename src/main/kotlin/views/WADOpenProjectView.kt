@@ -45,6 +45,6 @@ class WADOpenProjectView : Fragment() {
         }
     }
     override fun onUndock() {
-    //    WADStatus.stat.openProjectStatusCode = 0
+        WADStatic.WADstat.openProjectStatusCode = 0
     }
 }

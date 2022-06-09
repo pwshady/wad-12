@@ -5,6 +5,7 @@ import models.WADProject
 import staticWAD.WADStatic
 import tornadofx.Controller
 import views.WADCreateProjectView
+import views.WADOpenProjectView
 
 import java.io.File
 
@@ -53,10 +54,24 @@ class WADProjectsController : Controller() {
 
     fun openProjectView(): Int
     {
+        if (reCreateOpenProjectListName() == -1){
+            when (WADStatic.WADstat.openProjectStatusCode){
+                0 -> {
+                    find<WADOpenProjectView>().openWindow(owner = null)
+                    WADStatic.WADstat.openProjectStatusCode = 1
+                }
+                1 -> println("oop")
+            }
+        }
         return -1
     }
 
     fun openProject(name: String): Int
+    {
+        return -1
+    }
+
+    fun reCreateOpenProjectListName(): Int
     {
         return -1
     }
