@@ -17,9 +17,9 @@ class WADProjectsView() : View() {
 
             }
         }
-        //center(WADProjectCenterViev::class)
-        //var rightViev = WADProjectRightViev()
-        //right(rightViev::class)
+        center(WADProjectCenterView::class)
+        var rightViev = WADProjectRightView()
+        right(rightViev::class)
 
     }
 }

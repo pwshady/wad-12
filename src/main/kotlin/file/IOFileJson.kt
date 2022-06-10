@@ -32,7 +32,7 @@ class IOFileJson {
         return resultCode
     }
 
-    fun saveAllProjects(wadProject: WADProject): Int
+    fun saveAllProjects(): Int
     {
         var resultCode = 0
         try {
@@ -42,7 +42,6 @@ class IOFileJson {
             for (i in 0 until WADStatic.WADstat.allProjectList.size) {
                 allWADProjectJson.add(wadProjectToWadProjectJson(WADStatic.WADstat.allProjectList[i]))
             }
-            allWADProjectJson.add(wadProjectToWadProjectJson(wadProject))
             file.writeText(gson.toJson(allWADProjectJson))
             resultCode = -1
         }
@@ -75,18 +74,17 @@ class IOFileJson {
         return resultCode
     }
 
-    fun saveOpenProjects(wadProject: WADProject): Int
+    fun saveOpenProjects(): Int
     {
         var resultCode = 0
         try {
             var file = File("src/main/resources/openproject.json")
             val gson = Gson()
-            var allWADProjectJson = mutableListOf<WADProjectJson>()
-            for (i in 0 until WADStatic.WADstat.allProjectList.size) {
-                allWADProjectJson.add(wadProjectToWadProjectJson(WADStatic.WADstat.allProjectList[i]))
+            var openWADProjectJson = mutableListOf<WADProjectJson>()
+            for (i in 0 until WADStatic.WADstat.openProjectList.size) {
+                openWADProjectJson.add(wadProjectToWadProjectJson(WADStatic.WADstat.openProjectList[i]))
             }
-            allWADProjectJson.add(wadProjectToWadProjectJson(wadProject))
-            file.writeText(gson.toJson(allWADProjectJson))
+            file.writeText(gson.toJson(openWADProjectJson))
             resultCode = -1
         }
         catch (e: Exception){
@@ -124,7 +122,29 @@ class IOFileJson {
             resultCode = -1
         }
         catch (e: Exception){
-            resultCode = 101
+            resultCode = 102
+        }
+        return resultCode
+    }
+
+    fun saveFileList(path: String, fileList: List<String>): Int
+    {
+        var resultCode = 0
+        try {
+            val gson = Gson()
+            if (!File(path).exists()){
+                if(File(path).mkdirs()){
+                    val file = File("${path}\\filelist.wadflj")
+                    file.writeText(gson.toJson(fileList))
+                }
+            }else{
+                val file = File("${path}\\filelist.wadflj")
+                file.writeText(gson.toJson(fileList))
+            }
+            resultCode = -1
+        }
+        catch (e: Exception){
+            resultCode = 102
         }
         return resultCode
     }

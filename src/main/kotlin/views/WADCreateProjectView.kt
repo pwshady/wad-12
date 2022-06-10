@@ -197,7 +197,7 @@ class WADCreateProjectView() : Fragment() {
                         if (creat) {
                             var result: Int
                             var wadProject = WADProject(
-                                name.text, domenName.text, directory.text, 0, "",
+                                name.text, domenName.text, directory.text, "", "",
                                 ProjectSettings(from.text, to.text)
                             )
                             result = wadProjectsController.createProject(wadProject)

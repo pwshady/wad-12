@@ -7,7 +7,7 @@ data class WADProjectJson (
     val name: String,
     val domenName: String,
     val path: String,
-    val status: Int,
+    val status: String,
     val resumeKey: String,
     val projectSettings: ProjectSettingsJson
 ) {

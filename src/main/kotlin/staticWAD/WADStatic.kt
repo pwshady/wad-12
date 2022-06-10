@@ -12,6 +12,7 @@ class WADStatic {
         var errorList = mutableListOf<Pair<Int, Int>>()
         var openProjectList = mutableListOf<WADProject>().observable()
         var openProjectListName = mutableListOf<String>().observable()
+        var closeProjectListName = mutableListOf<String>().observable()
         var allProjectList = mutableListOf<WADProject>().observable()
         var allProjectListName = mutableListOf<String>().observable()
         var wadProjectList = mutableListOf<ProjectStatus>().observable()

@@ -11,21 +11,21 @@ class WADOpenProjectView : Fragment() {
     private val  wadProjectsController : WADProjectsController by inject()
     override val root: Parent = vbox {
         var listViev : ListView<String> by singleAssign()
-        listViev = listview(WADStatic.WADstat.openProjectListName){
+        listViev = listview(WADStatic.WADstat.closeProjectListName){
             selectionModel.selectionMode = SelectionMode.SINGLE
             contextmenu {
                 item("Open").action {
                     if (listViev.selectedItem != null){
-                        if (wadProjectsController.openProject(listViev.selectedItem!!) == 0){
-                            WADStatic.WADstat.openProjectListName
+                        if (wadProjectsController.openProject(listViev.selectedItem!!) == -1){
+                            WADStatic.WADstat.closeProjectListName
                         }
                     }
                 }
                 item("Delete").action {
                     if (listViev.selectedItem != null){
-        //                if (wadProjectsController.deleteProject(listViev.selectedItem!!) == 0){
-        //                    WADStatus.stat.openProjectListName
-        //                }
+                        if (wadProjectsController.deleteProject(listViev.selectedItem!!) == 0){
+                            WADStatic.WADstat.closeProjectListName
+                        }
                     }
                 }
             }
@@ -38,11 +38,6 @@ class WADOpenProjectView : Fragment() {
             }
         }
 
-        button("hh"){
-            action {
-        //        WADStatus.stat.openProjectListName.add("foo")
-            }
-        }
     }
     override fun onUndock() {
         WADStatic.WADstat.openProjectStatusCode = 0

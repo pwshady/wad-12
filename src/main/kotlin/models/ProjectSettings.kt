@@ -5,5 +5,5 @@ data class ProjectSettings (
     var to : String = "",
     var timestamp : Int = 0,
     var fileType : String = "",
-    var fileLimit : Int = 0,
+    var fileLimit : Int = 10000,
 )
