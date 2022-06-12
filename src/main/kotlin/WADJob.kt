@@ -2,22 +2,21 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import file.IOFileJson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import models.ProjectStatus
 import models.WADProject
+import models.WADVersionFileData
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import services.WADGetFileListService
 import staticWAD.WADStatic
 import tornadofx.onChange
 import java.io.File
-import java.util.*
-
 
 class WADJob(private val wadProject: WADProject) {
     val name = wadProject.name
     var flag = false
+    var filesStructure = mutableMapOf<String, MutableList<WADVersionFileData>>()
     fun main() {
         WADStatic.WADstat.wadProjectRunList.onChange {
             WADStatic.WADstat.wadProjectRunList.forEach{ it ->
@@ -68,28 +67,67 @@ class WADJob(private val wadProject: WADProject) {
                         fileList = fileList.subList(0, fileList.size - 3)
                         allFiles += fileList.size
                         wadProject.projectSettings.timestamp += 1
+                        fileList.replaceAll { "$it 0" }
+                        val resultSaveFile =
+                            iofj.saveFileList("${wadProject.path}\\part${wadProject.projectSettings.timestamp}", fileList)
+                        if (resultSaveFile != -1) {
+                            flag = false
+                        }
+                        addFileList(fileList)
                         println("prod")
-                        println(allFiles)
+                        println("File: $allFiles")
+                        println("Unique file: ${filesStructure.size}")
                     } else {
                         fileList = fileList.subList(0, fileList.size - 1)
                         wadProject.resumeKey = ""
                         flag = false
                         allFiles += fileList.size
+                        fileList.replaceAll { "$it 0" }
+                        val resultSaveFile =
+                            iofj.saveFileList("${wadProject.path}\\part${wadProject.projectSettings.timestamp}", fileList)
+                        if (resultSaveFile != -1) {
+                            flag = false
+                        }
+                        addFileList(fileList)
                         wadProject.status = "1"
+                        wadProject.projectSettings.timestamp = 0
                         println("end")
                         println("all files: " + (allFiles + 2).toString())
-                    }
-                    fileList.replaceAll { "$it 0" }
-                    val resultSaveFile =
-                        iofj.saveFileList("${wadProject.path}\\part${wadProject.projectSettings.timestamp}", fileList)
-                    if (resultSaveFile != -1) {
-                        flag = false
+                        println("Unique file: ${filesStructure.size}")
                     }
                     iofj.saveProject(wadProject)
+                }
+                if (wadProject.status == "1"){
+
                 }
             }
             WADStatic.WADstat.wadProjectList.last{it.projectName == name}.run = false
         }
+    }
+
+    fun addFileList(fileList : MutableList<String>): Int
+    {
+        var resultCode = 0
+        val longChars = '0'..'9'
+        fileList.map {
+            val fileStr = it.split(" ").toMutableList()
+            if (!fileStr[0].all { it in longChars }){
+                fileStr[0] = "0"
+            }
+            if (!fileStr[3].all { it in longChars }){
+                fileStr[3] = "0"
+            }
+            if (!fileStr[5].all { it in longChars }){
+                fileStr[5] = "0"
+            }
+            var fileData = Pair(fileStr[1], WADVersionFileData(fileStr[2], fileStr[3].toInt(), fileStr[4].toLong(), fileStr[0].toLong(), 0))
+            if (filesStructure.containsKey(fileData.first)){
+                filesStructure[fileData.first]?.add(fileData.second)
+            } else {
+                filesStructure.put(fileData.first, mutableListOf(fileData.second))
+            }
+        }
+        return resultCode
     }
 }
 

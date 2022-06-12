@@ -9,6 +9,8 @@ class WADProjectsView() : View() {
 
     }
     override val root: Parent = borderpane {
+        minWidth = 1200.0
+        minHeight = 800.0
         var topViev = WADProjectTopView()
         top(topViev::class)
 

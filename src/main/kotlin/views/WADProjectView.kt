@@ -56,21 +56,21 @@ class WADProjectView(wadProject: WADProject) : Fragment() {
                 }
             }
 
-            //progressbar {
-            //    thread {
-            //        var i = 0
-            //        while (true) {
-            //            Platform.runLater { progress = i.toDouble() / 10 }
-            //            Thread.sleep(1000)
-            //            if (WADStatic.WADstat.wadProjectList.lastOrNull { it.projectName == wadProject.name }?.run == true) {
-            //                i++
-            //            }
-            //            if (i == 10) {
-            //                i = 0
-            //            }
-            //        }
-            //    }
-            //}
+            progressbar {
+                thread {
+                    var i = 0
+                    while (true) {
+                        Platform.runLater { progress = i.toDouble() / 10 }
+                        Thread.sleep(1000)
+                        if (WADStatic.WADstat.wadProjectList.lastOrNull { it.projectName == wadProject.name }?.run == true) {
+                            i++
+                        }
+                        if (i == 10) {
+                            i = 0
+                        }
+                    }
+                }
+            }
             statusLabel = label {
                 text = "ggggg"+wadProjectController.getStatus(wadProject.name)
             }
@@ -83,8 +83,6 @@ class WADProjectView(wadProject: WADProject) : Fragment() {
         }
 
         drawer (side = Side.BOTTOM, multiselect = false) {
-            minWidth = 1200.0
-            minHeight = 800.0
             item("files", expanded = true){
 
             }
