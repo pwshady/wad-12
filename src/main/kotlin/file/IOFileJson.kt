@@ -149,6 +149,22 @@ class IOFileJson {
         return resultCode
     }
 
+    fun loadFileList(path: String): Pair<Int, List<String>>
+    {
+        var resultCode = 0
+        var fileList = mutableListOf<String>()
+        try {
+            val gson = Gson()
+            val file = File("${path}\\filelist.wadflj")
+            fileList = gson.fromJson(file.readText(), List::class.java) as MutableList<String>
+            resultCode = -1
+        }
+        catch (e: Exception){
+            resultCode = 102
+        }
+        return Pair(resultCode, fileList)
+    }
+
     fun wadProjectToWadProjectJson(wadProject: WADProject) : WADProjectJson
     {
         return WADProjectJson(

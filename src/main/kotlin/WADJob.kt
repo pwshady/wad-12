@@ -66,14 +66,13 @@ class WADJob(private val wadProject: WADProject) {
                     if (fileList[fileList.size - 3] == "") {
                         fileList = fileList.subList(0, fileList.size - 3)
                         allFiles += fileList.size
-                        wadProject.projectSettings.timestamp += 1
                         fileList.replaceAll { "$it 0" }
                         val resultSaveFile =
                             iofj.saveFileList("${wadProject.path}\\part${wadProject.projectSettings.timestamp}", fileList)
                         if (resultSaveFile != -1) {
                             flag = false
                         }
-                        addFileList(fileList)
+                        wadProject.projectSettings.timestamp += 1
                         println("prod")
                         println("File: $allFiles")
                         println("Unique file: ${filesStructure.size}")
@@ -88,7 +87,6 @@ class WADJob(private val wadProject: WADProject) {
                         if (resultSaveFile != -1) {
                             flag = false
                         }
-                        addFileList(fileList)
                         wadProject.status = "1"
                         wadProject.projectSettings.timestamp = 0
                         println("end")
@@ -98,14 +96,27 @@ class WADJob(private val wadProject: WADProject) {
                     iofj.saveProject(wadProject)
                 }
                 if (wadProject.status == "1"){
-
+                    WADStatic.WADstat.wadProjectList.add(ProjectStatus(wadProject.name, true, 0, "Load file list: part${wadProject.projectSettings.timestamp}"))
+                    while (File("${wadProject.path}\\part${wadProject.projectSettings.timestamp}").exists()){
+                        var result = iofj.loadFileList("${wadProject.path}\\part${wadProject.projectSettings.timestamp}")
+                        println(result.first)
+                        if (result.first == -1){
+                            addFileList(result.second as MutableList<String>)
+                        }
+                        wadProject.projectSettings.timestamp += 1
+                        println("Unique file: ${filesStructure.size}")
+                        println(wadProject.projectSettings.timestamp)
+                        println(File("${wadProject.path}\\part${wadProject.projectSettings.timestamp}").exists())
+                    }
+                    wadProject.projectSettings.timestamp = 0
+                    break
                 }
             }
             WADStatic.WADstat.wadProjectList.last{it.projectName == name}.run = false
         }
     }
 
-    fun addFileList(fileList : MutableList<String>): Int
+    private fun addFileList(fileList : MutableList<String>): Int
     {
         var resultCode = 0
         val longChars = '0'..'9'
