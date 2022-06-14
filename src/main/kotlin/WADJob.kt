@@ -87,6 +87,7 @@ class WADJob(private val wadProject: WADProject) {
                         if (resultSaveFile != -1) {
                             flag = false
                         }
+
                         wadProject.status = "1"
                         wadProject.projectSettings.timestamp = 0
                         println("end")
