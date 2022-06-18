@@ -99,8 +99,8 @@ class WADJob(private val wadProject: WADProject) {
                     iofj.saveProject(wadProject)
                 }
                 if (wadProject.status == "1"){
-                    WADStatic.WADstat.wadProjectList.add(ProjectStatus(wadProject.name, true, 0, "Load file list: part${wadProject.projectSettings.timestamp}"))
                     while (File("${wadProject.path}\\part${wadProject.projectSettings.timestamp}").exists()){
+                        WADStatic.WADstat.wadProjectList.add(ProjectStatus(wadProject.name, true, 0, "Create file list: part${wadProject.projectSettings.timestamp}"))
                         var result = iofj.loadFileList("${wadProject.path}\\part${wadProject.projectSettings.timestamp}")
                         println(result.first)
                         if (result.first == -1){

@@ -17,6 +17,8 @@ import kotlin.concurrent.thread
 class WADProjectView(wadProject: WADProject) : Fragment() {
     val  wadProjectController : WADProjectController by inject()
     override val root: Parent = vbox {
+        minWidth = 1200.0
+        minHeight = 800.0
         var textFieldDomenName : TextField by singleAssign()
         var statusLabel : Label by singleAssign()
         var buttonStart : Button by singleAssign()

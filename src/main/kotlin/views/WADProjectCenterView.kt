@@ -10,6 +10,8 @@ import tornadofx.*
 class WADProjectCenterView() : View() {
     val  wadProjectsController : WADProjectsController by inject()
     override val root: Parent = hbox {
+        minWidth = 1200.0
+        minHeight = 800.0
         var tp: TabPane by singleAssign()
         tp = tabpane() {}
         fun setTab(){
